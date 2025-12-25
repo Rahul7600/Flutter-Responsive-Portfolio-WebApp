@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        APP_SERVER_IP = "34.231.70.226"
+    }
+
     stages {
 
         stage('Checkout') {
@@ -21,17 +25,15 @@ pipeline {
             }
         }
 
-        /*
         stage('Deploy to App Server') {
             steps {
                 sshagent(credentials: ['EC2_SSH_KEY']) {
                     sh '''
-                        scp -o StrictHostKeyChecking=no -r build/web/* ubuntu@APP_SERVER_IP:/var/www/html/
+                        rsync -avz --delete \
+                        build/web/ ubuntu@$APP_SERVER_IP:/var/www/html/
                     '''
                 }
             }
         }
-        */
-
     }
 }
